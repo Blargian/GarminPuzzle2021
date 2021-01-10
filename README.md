@@ -32,3 +32,14 @@ With this information I can use the doppler formula found here:
 
 ## Results   
 
+I calculate around 29.738m/s for the Javelin and 12.9m/s for the shotput. 
+
+A quick google search for average [Javelin throwspeed!](https://theconversation.com/science-of-the-spear-biomechanics-of-a-javelin-throw-29782#:~:text=The%20average%20maximum%20run%20up,of%20the%20final%20two%20steps.)
+
+>The average maximum run up speed of an elite thrower ranges from 5-6m/s (20km/h), but elite throwers release the javelin at 28-30m/s
+
+[For shotput!](https://www.quinticsports.com/performance-analysis-shot-put/#:~:text=The%20average%20shot%20velocity%20at,ms%2D1%20for%20athlete%20B.)
+
+>The average shot velocity at release was 10.24ms-1 for athlete A and 9.40ms-1 for athlete B.
+
+So the numbers calculated at least seem plausible. 
