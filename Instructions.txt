@@ -1,0 +1,11 @@
+During a hackathon at Garmin Stellenbosch, you and your teammates are experimenting with sonic sensors for
+athletic events like shot-put and javelin.You've managed to put together a system that can transmit a
+sound signal at the projectile being thrown, and record the return signal that reflects off it.
+
+Attached are the transmitted signal that is used for all projectiles, and the received signals for a shot-put
+and a javelin throw. Can you calculate the speed at which each projectile was thrown?
+
+BONUS: Can you estimate how far the sonic sensor was off to the side of the thrower in each case?
+
+To apply, please e-mail your code and your CV to jaco.swart@garmin.com. Your approach, assumptions and
+coding excellence will be the most important factors being evaluated.
