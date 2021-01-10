@@ -19,7 +19,7 @@ The FFT of the transmit signal shows a clear spike in power at around 10kHz. The
 ![All Signals](/images/All_unfiltered.png)
 Format: ![All signals](url)
 
-![Filtered Received Signals](/images/Received.png)
+![Filtered Received Signals](/images/Received_filtered.png)
 Format: ![Received signals (filtered)](url) 
 
 The frequencies of each signal can be obtained programatically. I selected a cut-off for the lowpass filter of around 30% of the max frequency (where 50% is the nyquist frequency) because if I went any lower the peak value for the shotput seemed off in comparison to the graph, then I use a numpy function to 'peak detect' and get back the frequency of the peaks. I get those as:
