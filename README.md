@@ -45,32 +45,47 @@ A quick google search for average [Javelin throwspeed](https://theconversation.c
 
 So the numbers calculated at least seem plausible, if not a little high. However this is to be expected because the assumption was made that the tracker was inline with the thrower, where in reality it will be off to the side, so the actual speed here is not correct. 
 
-## BONUS
+## BONUS (An attempt)
 
-After a bit more googling I've come across something called "Doppler Angle", mostly in the context of ultrasound. The basic idea is that if you're measuring a flow of blood, you will be measuring at an angle which introduces error unless the beam is transmitted parallel to the flow of blood (not possible).I.e when measuring you want to be as close to an angle of 0 degrees as you can. This formula is given for the doppler angle:
+After a bit more googling I've come across something called "Doppler Angle", mostly in the context of ultrasound. The basic idea is that if you're measuring a flow of blood, you will be measuring at an angle which introduces error unless the beam is transmitted parallel to the flow of blood (not possible).I.e when measuring you want to be as close to an angle of 0 degrees as you can. Same thing applies here I think. This formula is given for the doppler angle:
 
-[\Large \Delta f = 2f_t\frac{V}{c}\cos\Theta](https://latex.codecogs.com/svg.latex?\Delta f&space;f&space;=&space;2f_t\frac{V}{c}\cos\Theta) 
+![\Large \Delta f = 2f_t\frac{V}{c}\cos\Theta](https://latex.codecogs.com/svg.latex?\Delta f&space;f&space;=&space;2f_t\frac{V}{c}\cos\Theta)
 
-Previously I made the assumption that the tracker was parallel to the thrower previously - in practise that is not correct which means that there is an error on the speeds above.
+Previously I made the assumption that the tracker was parallel to the thrower - in practise that is not correct which means that there is an error on the speeds above.
 
 ### Ideas
 
-Have been thinking of a way that I could solve for the Cosine angle geometrically but I think it might be more complex than that. One idea was maybe to generate my own signals for a variety of angles and then do a cross-correlation between the given signals and my own generated one and see which gives the maximum value. With that however there are multiple unknowns, the velocity of the moving target, the doppler frequency and the angle. 
+Have been thinking of a way that I could solve for the Cosine angle geometrically but I think it might be more complex than that. From the small amount of knowledge I have on radar and what I've read, normally you apply a matched filter to do range estimation. The phase information is very important for calculating how far the target is away. 
 
 Found this website on [Radar](https://www.radartutorial.eu/11.coherent/co06.en.html) 
 
-I'm a little rusty on my linear systems and signals knowledge but I do believe that I can obtain the phase difference between two signals by finding the maximum of the correlation between them (as seems to be confirmed [here](https://stackoverflow.com/questions/6157791/find-phase-difference-between-two-inharmonic-waves). 
+I'm a little rusty on my second year linear systems and signals knowledge but I do believe that I can obtain the phase difference between two signals by finding the maximum of the correlation between them (as seems to be confirmed [here](https://stackoverflow.com/questions/6157791/find-phase-difference-between-two-inharmonic-waves). 
 
-- Phase shift estimate between Transmitted and Javelin Received: 0.26582s
-- Phase shift estimate between Transmitted and Shotput Received: 0.50197s
+So I use cross-correlation to get the lag (in samples) between the transmit and receive signals. I then multiply that by the sample interval in seconds and convert that into a radian value. I'm using the formula above for the phase shift to calculate the distance R to the target. 
 
-With that knowledge maybe I can work out the distance using this formula:
+- Phase shift estimate between Transmitted and Javelin Received: 0.27 radians
+- Phase shift estimate between Transmitted and Shotput Received: 0.50 radians
 
-[\Large \phi = - \frac{2r 2\pi}{\lambda}](https://latex.codecogs.com/svg.latex?\phi&space;=&space;-&space;\frac{2r&space;2\pi}{\lambda}) 
+I then calculated the distance r (which I'm assuming is the radial distance) to the target using the above values and the formula below:
 
-Where phi is the phase-difference between the transmitted and the received signal and lambda is the wavelength of the transmitted energy. 
+![\Large \phi = -\frac{2r \times 2\pi}{\lambda}](https://latex.codecogs.com/svg.latex?\phi&space;=&space;-\frac{2r&space;\times&space;2\pi}{\lambda}) 
 
-So the distances between the two objects I get as 
+From that you can work out how far to the side the sensor is for a given angle of inclination (I think you would choose this to be low to reduce the error) using simple trigonometry.
+
+
+
+
+
+
+
+
+	
+
+
+
+
+
+ 
  
 
 

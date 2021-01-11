@@ -13,6 +13,10 @@ from scipy.fft import rfft, rfftfreq, irfft
 from scipy import signal
 from scipy.signal import correlate
 
+# Constants
+
+c = 343 #343m/s
+
 scriptDir = os.path.join(os.path.dirname(__file__),'sound-files')
 
 #Takes the audio file and returns the time series data
@@ -44,16 +48,20 @@ def simple_peak_detect(x,y):
 
 #Calculates the speed using the doppler formula
 def calc_speed(fSource,fTarget):
-    c = 343 #343m/s
+    global c
     delta_f = np.abs(fSource-fTarget)
     return (delta_f/fSource)*(c/2)
 
-#Estimate the angle  
-def estimate_angle(fSource,fTarget,vTarget):
-    c = 343 #343m/s
-    delta_f = np.abs(fSource-fTarget)
-    theta = delta_f/(2*fSource*(vTarget/c))
-    print(theta)
+#Calculates the distance to the target    
+def calculate_distance(phaseDelay,frequencyOfTransmitted):
+    global c
+    lmbda = c/frequencyOfTransmitted
+    return (phaseDelay*lmbda)/(4*np.pi)
+
+#Calculates how far to the side for a given angle (degrees)
+def distance_to_side(theta,distanceToTarget):
+    return np.sin(theta*(np.pi/180))*distanceToTarget
+
     
 
 ### Load in the data from .wav files ###
@@ -116,7 +124,6 @@ plt.plot(xf3[100:], np.abs(yf3clean)[100:],label='Received (Shotput)') #From 100
 plt.legend()
 plt.xlim(8000,9500)
 
-
 ### Obtain the frequencies of the signals ###
 
 fTransmit = simple_peak_detect(xf,yf)
@@ -136,13 +143,27 @@ print('Speed for Shotput: {}m/s '.format(vShotput))
 
 ### BONUS ###
 
-correlation = correlate(dataTransmit,dataJavelinClean)
-maxValue = np.argmax(correlation,axis=0)
-print('Phase shift estimate between Transmitted and Javelin Received: {}s'.format(maxValue*T))
+### Cross-correlate to get the time delay between the two signals ###
 
-correlation2 = correlate(dataTransmit,dataShotputClean)
-maxValue2 = np.argmax(correlation2,axis=0)
-print('Phase shift estimate between Transmitted and Shotput: {}s'.format(maxValue2*T))
+correlation = correlate(dataTransmit,dataJavelinClean,"full")
+phaseShift = np.argmax(correlation)*T*2*np.pi*(fTransmit/c)
+print('Phase shift estimate between Transmitted and Javelin Received: {} radians '.format(phaseShift))
+
+correlation2 = correlate(dataTransmit,dataShotputClean,"full")
+phaseShift2 = np.argmax(correlation2)*T*2*np.pi*(fTransmit/c)
+print('Phase shift estimate between Transmitted and Shotput: {} radians'.format(phaseShift2))
+
+### Work out the distance ###
+
+distanceJavelin = calculate_distance(phaseShift,fTransmit)
+distanceShotput = calculate_distance(phaseShift2,fTransmit)
+print('Distance of target (Javelin): {}m'.format(distanceJavelin))
+print('Distance of target (Shotput): {}m'.format(distanceShotput))
+
+### For a given angle, calculate how far to the side you would have to be ###
+print(distance_to_side(20, distanceJavelin))
+print(distance_to_side(20, distanceShotput))
+
 
 
 
