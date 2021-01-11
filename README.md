@@ -6,15 +6,16 @@ I've been given three sound files. The first is a recording of a transmission si
 ## Assumptions
 
 - Assume that the transmitter/receive system is stationary.
-- Assume that the velocities of the objects involved in this problem are less than the speed of light i.e) they share a common frame of reference... sorry Einstein, next time! 
+- Assume that the velocities of the objects involved in this problem are less than the speed of light i.e) they share a common frame of reference... sorry Albert, maybe next time! 
+- For a start assume that the transmitter/receive system is parallel to the sportsman. 
 
 ## Approach
 
-The first thing that came to mind was a speed gun, a device which uses EM waves and the doppler effect to measure the velocity of the object. I have a gut feel that this problem involves the doppler effect and that it would involve extracting the frequency information of the signals as there isn't much else to go on. I thought of the radar equation but I'm not sure how that transfers to audio + i'd need things like radar cross section and gain etc.
+The first thing that came to mind after reading the challenge was a speed gun, a device which uses EM waves and the doppler effect to measure the velocity of the object. I have a gut feel that this problem involves the doppler effect in some way and that it would involve extracting the frequency information of the signals as there isn't much else to go on. I thought of the radar equation but I'm not sure how that transfers to audio, plus i'd need things like radar cross section and gain etc.
 
 I first wrote a simple python script (see challenge.py) to read the .wav data and to plot the FFT of the data to see the frequency information. 
 
-The FFT of the transmit signal shows a clear spike in power at around 10kHz. The receiving signals are noisy - so I do some filtering on those just by applying a low pass filter. Plotting the cleaner data I can see clear spikes in power at a little more than 8kHz for the Javelin and a little more than 9kHz for the shotput. This makes sense to me as the drop in frequency (red-shift) would indicate that the target is moving **away** from the observer.
+The FFT of the transmit signal shows a clear spike in power at around 10kHz. The receiving signals are noisy - so I do some crude filtering on those signals first, just by visually inspecting where the peaks are and then zeroing below a threshhold value. Plotting the cleaner data I can see clear spikes in power at a little more than 8kHz for the Javelin and a little more than 9kHz for the shotput. This makes sense to me as the drop in frequency (red-shift) would indicate that the target is moving **away** from the observer. Shown below in the first image a plot of the frequency information for all three and then in image two, the filtered data for the received signals. 
 
 ![All Signals](/images/All_unfiltered.png)
 
@@ -32,14 +33,46 @@ With this information I can use the doppler formula found here:
 
 ## Results   
 
-I calculate around 29.738m/s for the Javelin and 12.9m/s for the shotput. 
+I calculate a release speed of around **32.04m/s** for the Javelin and **13.51m/s** for the shotput. 
 
-A quick google search for average [Javelin throwspeed!](https://theconversation.com/science-of-the-spear-biomechanics-of-a-javelin-throw-29782#:~:text=The%20average%20maximum%20run%20up,of%20the%20final%20two%20steps.)
+A quick google search for average [Javelin throwspeed](https://theconversation.com/science-of-the-spear-biomechanics-of-a-javelin-throw-29782#:~:text=The%20average%20maximum%20run%20up,of%20the%20final%20two%20steps.)
 
 >The average maximum run up speed of an elite thrower ranges from 5-6m/s (20km/h), but elite throwers release the javelin at 28-30m/s
 
-[For shotput!](https://www.quinticsports.com/performance-analysis-shot-put/#:~:text=The%20average%20shot%20velocity%20at,ms%2D1%20for%20athlete%20B.)
+[For shotput](https://www.quinticsports.com/performance-analysis-shot-put/#:~:text=The%20average%20shot%20velocity%20at,ms%2D1%20for%20athlete%20B.)
 
 >The average shot velocity at release was 10.24ms-1 for athlete A and 9.40ms-1 for athlete B.
 
-So the numbers calculated at least seem plausible. 
+So the numbers calculated at least seem plausible, if not a little high. However this is to be expected because the assumption was made that the tracker was inline with the thrower, where in reality it will be off to the side, so the actual speed here is not correct. 
+
+## BONUS
+
+After a bit more googling I've come across something called "Doppler Angle", mostly in the context of ultrasound. The basic idea is that if you're measuring a flow of blood, you will be measuring at an angle which introduces error unless the beam is transmitted parallel to the flow of blood (not possible).I.e when measuring you want to be as close to an angle of 0 degrees as you can. This formula is given for the doppler angle:
+
+[\Large \Delta f = 2f_t\frac{V}{c}\cos\Theta](https://latex.codecogs.com/svg.latex?\Delta f&space;f&space;=&space;2f_t\frac{V}{c}\cos\Theta) 
+
+Previously I made the assumption that the tracker was parallel to the thrower previously - in practise that is not correct which means that there is an error on the speeds above.
+
+### Ideas
+
+Have been thinking of a way that I could solve for the Cosine angle geometrically but I think it might be more complex than that. One idea was maybe to generate my own signals for a variety of angles and then do a cross-correlation between the given signals and my own generated one and see which gives the maximum value. With that however there are multiple unknowns, the velocity of the moving target, the doppler frequency and the angle. 
+
+Found this website on [Radar](https://www.radartutorial.eu/11.coherent/co06.en.html) 
+
+I'm a little rusty on my linear systems and signals knowledge but I do believe that I can obtain the phase difference between two signals by finding the maximum of the correlation between them (as seems to be confirmed [here](https://stackoverflow.com/questions/6157791/find-phase-difference-between-two-inharmonic-waves). 
+
+- Phase shift estimate between Transmitted and Javelin Received: 0.26582s
+- Phase shift estimate between Transmitted and Shotput Received: 0.50197s
+
+With that knowledge maybe I can work out the distance using this formula:
+
+[\Large \phi = - \frac{2r 2\pi}{\lambda}](https://latex.codecogs.com/svg.latex?\phi&space;=&space;-&space;\frac{2r&space;2\pi}{\lambda}) 
+
+Where phi is the phase-difference between the transmitted and the received signal and lambda is the wavelength of the transmitted energy. 
+
+So the distances between the two objects I get as 
+ 
+
+
+
+
