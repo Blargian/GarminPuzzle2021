@@ -160,11 +160,9 @@ distanceShotput = calculate_distance(phaseShift2,fTransmit)
 print('Distance of target (Javelin): {}m'.format(distanceJavelin))
 print('Distance of target (Shotput): {}m'.format(distanceShotput))
 
-### For a given angle, calculate how far to the side you would have to be ###
-print(distance_to_side(20, distanceJavelin))
-print(distance_to_side(20, distanceShotput))
-
-
+angle = 20
+print('Distance to the side of the target for angle of {}: {}m'.format(angle,distance_to_side(angle,distanceJavelin)))
+print('Distance to the side of the target for angle of {}: {}m'.format(angle,distance_to_side(angle,distanceShotput)))
 
 
 
