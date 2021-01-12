@@ -49,7 +49,7 @@ So the numbers calculated at least seem plausible, if not a little high. However
 
 After a bit more googling I've come across something called "Doppler Angle", mostly in the context of ultrasound. The basic idea is that if you're measuring a flow of blood, you will be measuring at an angle which introduces error unless the beam is transmitted parallel to the flow of blood (not possible)I.e when measuring you want to be as close to an angle of 0 degrees to the motion of the tracked object as you can. Same thing applies here I think. This formula is given for the doppler angle:
 
-![\Large \Delta f = 2f_t\frac{V}{c}\cos\Theta](https://latex.codecogs.com/svg.latex?\Deltaf&space;f&space;=&space;2f_t\frac{V}{c}\cos\Theta)
+![\Large \Delta f = 2f_t\frac{V}{c}\cos\Theta](https://latex.codecogs.com/svg.latex?\Delta&space;f&space;=&space;2f_t\frac{V}{c}\cos\Theta) 
 
 Previously I made the assumption that the tracker was parallel to the thrower - in practise that is not correct which means that there is an error on the speeds above.
 
